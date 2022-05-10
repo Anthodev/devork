@@ -1,0 +1,15 @@
+version: "3.4"
+
+services:
+  devork:
+    container_name: "devork"
+    restart: unless-stopped
+    build: ./
+    tty: true
+    user: ${USER_ID:-1000}:${GROUP_ID:-1000}
+    volumes:
+      - ./:/usr/app:rw,cached
+    env_file:
+      - .env.dev.local
+    ports:
+      - "80:80"
