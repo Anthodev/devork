@@ -7,9 +7,9 @@ services:
     build: ./
     tty: true
     user: ${USER_ID:-1000}:${GROUP_ID:-1000}
+    env_file:
+      - .env
     volumes:
       - ./:/usr/app:rw,cached
-    env_file:
-      - .env.dev.local
     ports:
       - "80:80"

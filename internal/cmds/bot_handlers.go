@@ -1,30 +1,36 @@
 package cmds
 
 import (
-	"github.com/anthodev/devork/internal/api/response"
+	"github.com/anthodev/devork/internal/cmds/cmds_handlers"
 	"github.com/bwmarrin/discordgo"
 )
 
-func BotHandlers() map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func PresenceHandler() map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	return map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-		"ping": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-			var additionalData []string
-			options := i.ApplicationCommandData().Options
-
-			if len(options) > 0 {
-				optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
-				for _, option := range options {
-					optionMap[option.Name] = option
-				}
-
-				msgformat := "A command with options:"
-
-				additionalData = append(additionalData, optionMap["message"].StringValue())
-
-				response.SendResponse(msgformat, additionalData, s, i)
-			} else {
-				response.SendResponse("Pong!", additionalData, s, i)
+		"presence": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			if i.Type != discordgo.InteractionApplicationCommand {
+				return
 			}
+
+			cmds_handlers.CreatePresenceEmbedMessage(s, i, false)
 		},
+	}
+}
+
+func createPresenceInteractionResponse(s *discordgo.Session, i *discordgo.InteractionCreate) {
+	err := s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Embeds: []*discordgo.MessageEmbed{
+				cmds_handlers.CreatePresenceEmbed(),
+			},
+			Components: []discordgo.MessageComponent{
+				cmds_handlers.CreatePresenceActionRow(),
+			},
+		},
+	})
+
+	if err != nil {
+		panic(err)
 	}
 }
