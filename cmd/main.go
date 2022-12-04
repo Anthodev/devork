@@ -1,9 +1,9 @@
 package main
 
 import (
-    "github.com/anthodev/devork/internal/api/client"
+	"github.com/anthodev/devork/internal/api/client"
 )
 
 func main() {
-    client.RunDiscordApi()
+	client.RunDiscordApi()
 }

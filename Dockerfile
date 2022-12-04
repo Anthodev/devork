@@ -26,11 +26,7 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 	-p last-working-dir \
 	-p docker \
 	-p github \
-	-p golang \
-	-p https://github.com/zsh-users/zsh-autosuggestions \
-	-p https://github.com/zsh-users/zsh-completions \
-	-p https://github.com/zsh-users/zsh-syntax-highlighting \
-	-p https://github.com/zsh-users/zsh-history-substring-search
+	-p golang
 
 RUN cp -af /root/.oh-my-zsh /home/${USERNAME}/ && \
   cp -af /root/.zshrc /home/${USERNAME}/ && sed -i 's/root/home\/${USERNAME}/g' /home/${USERNAME}/.zshrc && \
@@ -43,7 +39,3 @@ USER $USERNAME
 WORKDIR /usr/app
 
 COPY . .
-
-RUN go install github.com/cosmtrek/air@v1.29.0
-
-#CMD ["air"]
