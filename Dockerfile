@@ -8,7 +8,7 @@ ARG USER_GID=1000
 
 RUN apt update \
     && apt upgrade -y \
-    && apt install -y git bash
+    && apt install -y git bash net-tools
 
 # Setup user
 RUN addgroup --gid ${USER_GID} ${USERNAME}
@@ -16,22 +16,6 @@ RUN adduser $USERNAME --home /home/$USERNAME --disabled-password --uid $USER_UID
     mkdir -p /etc/sudoers.d && \
     echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && \
     chmod 0440 /etc/sudoers.d/$USERNAME
-
-RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.2/zsh-in-docker.sh)" -- \
-	-a 'HIST_STAMPS="yyyy-mm-dd"' \
-	-p git \
-	-p z \
-	-p autojump \
-	-p history \
-	-p last-working-dir \
-	-p docker \
-	-p github \
-	-p golang
-
-RUN cp -af /root/.oh-my-zsh /home/${USERNAME}/ && \
-  cp -af /root/.zshrc /home/${USERNAME}/ && sed -i 's/root/home\/${USERNAME}/g' /home/${USERNAME}/.zshrc && \
-  chown -R ${USER_UID}:${USER_GID} /home/${USERNAME}/.oh-my-zsh && \
-  chown -R ${USER_UID}:${USER_GID} /home/${USERNAME}/.zshrc
 
 # Setup shell
 USER $USERNAME
