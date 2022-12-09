@@ -52,10 +52,10 @@ func CreatePresenceEmbedMessage(s *discordgo.Session, i *discordgo.InteractionCr
 	} else {
 		if int(originalDate.Weekday()) == 0 || int(originalDate.Weekday()) >= 2 {
 			startDate = nextWeekStartDate(currentDate)
-			endDate = nextWeekEndDate(currentDate)
+			endDate = nextWeekEndDate(startDate)
 		} else {
 			startDate = weekStartDate(currentDate)
-			endDate = weekEndDate(currentDate)
+			endDate = weekEndDate(startDate)
 		}
 
 		CreatePresenceMessage(s, i, startDate, endDate)
